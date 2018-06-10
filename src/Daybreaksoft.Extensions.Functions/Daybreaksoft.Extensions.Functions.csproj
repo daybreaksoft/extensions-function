@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net451;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Daybreaksoft.Extensions.Functions</PackageId>
+    <Authors>Daybreaksoft</Authors>
+    <Company>Daybreaksoft</Company>
+    <Description>Daybreaksoft.Extensions.Functions is an extensions for Asp.Net or Asp.Net Core.</Description>
+    <Copyright>©2018 Daybreaksoft</Copyright>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/daybreaksoft/extensions-functions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/daybreaksoft/extensions-functions.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>c#;c sharp;asp.net;asp.net core</PackageTags>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);NetStandard13</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
+  </ItemGroup>
+  
+</Project>
