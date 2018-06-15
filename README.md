@@ -14,7 +14,7 @@ Install-Package Daybreaksoft.Extensions.Functions
 - Type Extensions
   - [FindProperties&lt;TAttribute&gt;](#typefindpropertiestattribute)
   - [FindProperty&lt;TAttribute&gt;](#typefindpropertytattribute)
-  - InvokeMethod
+  - [InvokeMethod](#typeinvokemethodstring-methodname-object-obj-params-object-parameters)
 - Object Extensions
   - [CopyValueTo](#objectcopyvaluetoobject-target-copyvaluemethod-method-bool-ingoreconverttypefailed-stringcomparison-stringcomparison)
 # How to use
@@ -50,31 +50,31 @@ Allow to dynamic call method.
 ```csharp
 pulic class User
 {
-      public void Count()
+      public void Count(int number)
       {
       }
 }
 
 var user = new User();
 var type = typeof(User);
-type.InvokeMethod(user, null);
+type.InvokeMethod("Count", user, 1);
 ```
-If you want to use this method via async/await, do it like the folllow code.
+If you want to use this method that implemented by async/await, do it like the folllow code.
 ```csharp
 pulic class User
 {
-      public void Count()
+      public async Task CountAsync()
       {
       }
 }
 
 public class Test
 {
-    public async Task Test()
+    public async Task TestAsync()
     {
         var user = new User();
         var type = typeof(User);
-        await (Task)type.InvokeMethod(user, null);
+        await (Task)type.InvokeMethod("CountAsync", user, 1);
     }
 }
 
