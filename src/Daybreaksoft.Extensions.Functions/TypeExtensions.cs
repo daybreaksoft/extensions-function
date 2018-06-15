@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Daybreaksoft.Extensions.Functions
 {
@@ -39,6 +40,21 @@ namespace Daybreaksoft.Extensions.Functions
             }
 
             return properties.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Invoide method
+        /// </summary>
+        public static object InvokeMethod(this Type type, string methodName, object obj, params object[] parameters)
+        {
+            var method = type.GetMethod(methodName);
+
+            if (method == null)
+            {
+                throw new NullReferenceException($"Cannot found method {methodName} in {type.Namespace}.");
+            }
+
+            return method.Invoke(obj, parameters);
         }
     }
 }

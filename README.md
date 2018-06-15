@@ -14,6 +14,7 @@ Install-Package Daybreaksoft.Extensions.Functions
 - Type Extensions
   - [FindProperties&lt;TAttribute&gt;](#typefindpropertiestattribute)
   - [FindProperty&lt;TAttribute&gt;](#typefindpropertytattribute)
+  - InvokeMethod
 - Object Extensions
   - [CopyValueTo](#objectcopyvaluetoobject-target-copyvaluemethod-method-bool-ingoreconverttypefailed-stringcomparison-stringcomparison)
 # How to use
@@ -43,6 +44,40 @@ pulic class User
 
 var type = typeof(User);
 type.FindProperty<KeyAttribute>();
+```
+## Type.InvokeMethod(string methodName, object obj, params object[] parameters)
+Allow to dynamic call method.
+```csharp
+pulic class User
+{
+      public void Count()
+      {
+      }
+}
+
+var user = new User();
+var type = typeof(User);
+type.InvokeMethod(user, null);
+```
+If you want to use this method via async/await, do it like the folllow code.
+```csharp
+pulic class User
+{
+      public void Count()
+      {
+      }
+}
+
+public class Test
+{
+    public async Task Test()
+    {
+        var user = new User();
+        var type = typeof(User);
+        await (Task)type.InvokeMethod(user, null);
+    }
+}
+
 ```
 ## Object.CopyValueTo(object target, CopyValueMethod method, bool ingoreConvertTypeFailed, StringComparison stringComparison)
 Allow to copy value of properties to target object. Only support use property name or alias name.  

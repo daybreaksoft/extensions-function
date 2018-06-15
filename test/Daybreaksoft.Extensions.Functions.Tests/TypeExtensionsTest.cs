@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Daybreaksoft.Extensions.Functions.Tests
@@ -51,6 +52,20 @@ namespace Daybreaksoft.Extensions.Functions.Tests
             // Verifies that none result
             property = type1.FindProperty<Attribute3>();
             Assert.Null(property);
+        }
+
+        [Fact]
+        public void TestInvokeMethod()
+        {
+            var obj = new MethodTest();
+            var type = obj.GetType();
+
+            // Verifies that call method correctly
+            type.InvokeMethod("Add", obj, 5);
+            Assert.Equal(5, obj.Count);
+
+            // Verifies that not find method
+            Assert.Throws<NullReferenceException>(() => { type.InvokeMethod("NoMethod", obj, 1); });
         }
     }
 }
