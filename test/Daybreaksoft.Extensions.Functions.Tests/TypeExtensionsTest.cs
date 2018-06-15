@@ -67,5 +67,19 @@ namespace Daybreaksoft.Extensions.Functions.Tests
             // Verifies that not find method
             Assert.Throws<NullReferenceException>(() => { type.InvokeMethod("NoMethod", obj, 1); });
         }
+
+        [Fact]
+        public async Task TestInvokeMethodAsync()
+        {
+            var obj = new MethodTest();
+            var type = obj.GetType();
+
+            // Verifies that call method correctly
+            await (Task)type.InvokeMethod("AddAsync", obj, 5);
+            Assert.Equal(5, obj.Count);
+
+            // Verifies that not find method
+            await Assert.ThrowsAsync<NullReferenceException>(async () => { await (Task)type.InvokeMethod("NoMethod", obj, 1); });
+        }
     }
 }

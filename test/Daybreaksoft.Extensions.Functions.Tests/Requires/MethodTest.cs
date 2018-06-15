@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Daybreaksoft.Extensions.Functions.Tests.Requires
 {
@@ -11,6 +12,11 @@ namespace Daybreaksoft.Extensions.Functions.Tests.Requires
         public void Add(int number)
         {
             Count += number;
+        }
+
+        public async Task AddAsync(int number)
+        {
+            await Task.Run(() => { Count += number; });
         }
     }
 }
