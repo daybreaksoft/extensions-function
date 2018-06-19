@@ -14,7 +14,7 @@ namespace Daybreaksoft.Extensions.Functions.Tests.Requires
 
         public string p5 { get; set; }
 
-        public string P6 { get; private set; }
+        public int P6 { get; private set; }
 
         public string P7 { get; set; }
     }

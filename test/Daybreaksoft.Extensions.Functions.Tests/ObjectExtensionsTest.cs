@@ -21,7 +21,7 @@ namespace Daybreaksoft.DotNet.Extensions.Tests
                 P3 = "P3",
                 P4 = "P4",
                 P5 = "P5",
-                P6 = "P6",
+                P6 = 6,
                 PP = "P7",
                 P8 = new Model3
                 {
@@ -49,11 +49,6 @@ namespace Daybreaksoft.DotNet.Extensions.Tests
                 m1.CopyValueTo(m2);
             });
 
-            // Verifies that set value between different type but ingore
-            m1.CopyValueTo(target: m2, ingoreConvertTypeFailed: true);
-            Assert.Equal(-10, m2.P1);
-            Assert.Equal("P2", m2.P2);
-
             // Verifies that successful
             var m3 = new Model3
             {
@@ -64,12 +59,25 @@ namespace Daybreaksoft.DotNet.Extensions.Tests
             Assert.Equal("P2", m3.P2);
             Assert.Equal("P3", m3.P3);
             Assert.Equal("-p5", m3.p5);
-            Assert.Equal("P6", m3.P6);
-            Assert.Equal("P7", m3.P7);
+            Assert.Equal(6, m3.P6);
+            Assert.Null(m3.P7);
 
             // Verifies that ignore case
             m1.CopyValueTo(target: m3, stringComparison: StringComparison.CurrentCultureIgnoreCase);
             Assert.Equal("P5", m3.p5);
+
+            // Verifies that ignore property
+            m3 = new Model3();
+            m1.CopyValueTo(target: m3, ignorePropertyNames:new string[] { "P1", "P2" });
+            Assert.Null(m3.P1);
+            Assert.Null(m3.P2);
+
+            // Verifies that ignore property
+            m3 = new Model3();
+            var map = new Dictionary<string, string>();
+            map.Add("PP", "P7");
+            m1.CopyValueTo(target: m3, propertyMap: map);
+            Assert.Equal("P7", m3.P7);
 
             // Verifies that throw MultipleResultException if ignore case
             var m4 = new Model4();
@@ -78,11 +86,17 @@ namespace Daybreaksoft.DotNet.Extensions.Tests
                 m1.CopyValueTo(target: m4, stringComparison: StringComparison.CurrentCultureIgnoreCase);
             });
 
-            // Verifies that copy class or collection
+            // Verifies that copy value type and ref type
             var m5 = new Model5();
-            m1.CopyValueTo(m5);
+            m1.CopyValueTo(m5, ignoreRefType: false);
             Assert.True(m1.P8 == m5.P8);
             Assert.True(m1.P9 == m5.P9);
+
+            // Verifies that ignore ref type
+            m5 = new Model5();
+            m1.CopyValueTo(m5);
+            Assert.Null(m5.P8);
+            Assert.Null(m5.P9);
         }
     }
 }

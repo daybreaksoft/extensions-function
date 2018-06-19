@@ -20,9 +20,8 @@ namespace Daybreaksoft.Extensions.Functions.Tests.Requires
 
         public string P5 { get; set; }
 
-        public string P6 { get; set; }
+        public int P6 { get; set; }
 
-        [Alias("P7")]
         public string PP { get; set; }
 
         public Model3 P8 { get; set; }

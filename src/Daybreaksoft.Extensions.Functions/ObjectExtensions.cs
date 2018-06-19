@@ -11,7 +11,12 @@ namespace Daybreaksoft.Extensions.Functions
         /// <summary>
         /// Copy current object values to target object
         /// </summary>
-        public static void CopyValueTo(this object obj, object target, CopyValueMethod method = CopyValueMethod.UsingPropertyNameOrAlias, bool ingoreConvertTypeFailed = false, StringComparison stringComparison = StringComparison.CurrentCulture)
+        public static void CopyValueTo(this object obj,
+            object target,
+            string[] ignorePropertyNames = null,
+            Dictionary<string, string> propertyMap = null,
+            bool ignoreRefType = true,
+            StringComparison stringComparison = StringComparison.CurrentCulture)
         {
             if (target == null) throw new ArgumentNullException("Target object cannot be null.");
 
@@ -20,26 +25,14 @@ namespace Daybreaksoft.Extensions.Functions
             var targetObjType = target.GetType();
 
             // Get properties
-            PropertyInfo[] currentObjProperties, targetObjProperties;
-
-#if !NetStandard13
-            currentObjProperties = currentObjType.GetProperties();
-            targetObjProperties = targetObjType.GetProperties();
-#else
-            currentObjProperties = System.Reflection.TypeExtensions.GetProperties(currentObjType);
-            targetObjProperties = System.Reflection.TypeExtensions.GetProperties(targetObjType);
-#endif
+            var currentObjProperties = currentObjType.GetProperties();
+            var targetObjProperties = targetObjType.GetProperties();
 
             // Copy value
             foreach (var cp in currentObjProperties)
             {
-                PropertyInfo tp = null;
-
                 // Try to find target property using selected method
-                if (method == CopyValueMethod.UsingPropertyNameOrAlias)
-                {
-                    tp = FindPropertyUsingPropertyNameOrAlias(cp, targetObjProperties, stringComparison);
-                }
+                var tp = FindPropertyUsingPropertyName(cp, targetObjProperties, ignorePropertyNames, propertyMap, ignoreRefType, stringComparison);
 
                 // Try to set value
                 if (tp != null)
@@ -50,12 +43,7 @@ namespace Daybreaksoft.Extensions.Functions
                     }
                     catch (Exception ex)
                     {
-                        // Sometimes two properties have different type, it will cause convert failed.
-                        // If ingore this issue, it will skip, otherwise throw exception
-                        if (!ingoreConvertTypeFailed)
-                        {
-                            throw new InvalidTypeConvertedException($"Set value of Property {cp.Name} failed. {ex.Message}");
-                        }
+                        throw new InvalidTypeConvertedException($"Set value of Property {cp.Name} failed. {ex.Message}");
                     }
                 }
             }
@@ -64,26 +52,43 @@ namespace Daybreaksoft.Extensions.Functions
         /// <summary>
         /// Find property using same name or alias
         /// </summary>
-        private static PropertyInfo FindPropertyUsingPropertyNameOrAlias(PropertyInfo property, PropertyInfo[] targetProperties, StringComparison stringComparison)
+        private static PropertyInfo FindPropertyUsingPropertyName(
+            PropertyInfo property,
+            PropertyInfo[] targetProperties,
+            string[] ignorePropertyNames,
+            Dictionary<string, string> propertyMap,
+            bool ignoreRefType,
+            StringComparison stringComparison)
         {
             var name = property.Name;
             var alias = string.Empty;
 
+            // Direct return null if the type name wihtin ginore property names list
+            if (ignorePropertyNames != null && ignorePropertyNames.Any(p => p.Equals(name, stringComparison)))
+            {
+                return null;
+            }
+
+            // If property map is not null, change name value within map.
+            if (propertyMap != null)
+            {
+                if (propertyMap.ContainsKey(name))
+                {
+                    name = propertyMap[name];
+                }
+            }
+
             // Try to using propery name to find same property
             var tps = targetProperties.Where(p => p.Name.Equals(name, stringComparison));
 
-            if (!tps.Any())
+            if (ignoreRefType)
             {
-                // Try to get alias
-                var aliasAttr = property.GetCustomAttribute<AliasAttribute>();
 
-                // Try to using alias to find same property
-                if (aliasAttr != null && !string.IsNullOrEmpty(aliasAttr.Name))
-                {
-                    alias = aliasAttr.Name;
-
-                    tps = targetProperties.Where(p => p.Name.Equals(alias, stringComparison));
-                }
+#if !NetStandard13
+                tps = tps.Where(p => p.PropertyType.IsValueType || p.PropertyType == typeof(string));
+#else
+                throw new Exception("Can not support to ignore ref type in netstandard1.3.");
+#endif
             }
 
             // Verify whether only have one property

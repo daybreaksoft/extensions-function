@@ -14,11 +14,11 @@ Install-Package Daybreaksoft.Extensions.Functions
 - Type Extensions
   - [FindProperties&lt;TAttribute&gt;](#typefindpropertiestattribute)
   - [FindProperty&lt;TAttribute&gt;](#typefindpropertytattribute)
-  - [InvokeMethod](#typeinvokemethodstring-methodname-object-obj-params-object-parameters)
+  - [InvokeMethod](#typeinvokemethod)
 - Object Extensions
-  - [CopyValueTo](#objectcopyvaluetoobject-target-copyvaluemethod-method-bool-ingoreconverttypefailed-stringcomparison-stringcomparison)
+  - [CopyValueTo](#objectcopyvalueto)
 # How to use
-## Type.FindProperties&lt;TAttribute&gt;()
+## Type.FindProperties&lt;TAttribute&gt;
 Allow to find property vis specified attrubute. It supports return multiple results.
 ```csharp
 pulic class User
@@ -33,7 +33,7 @@ pulic class User
 var type = typeof(User);
 type.FindProperties<RequiredAttribute>();
 ```
-## Type.FindProperty&lt;TAttribute&gt;()
+## Type.FindProperty&lt;TAttribute&gt;
 Allow to find property vis specified attrubute. Only support return signle results.
 ```csharp
 pulic class User
@@ -45,7 +45,7 @@ pulic class User
 var type = typeof(User);
 type.FindProperty<KeyAttribute>();
 ```
-## Type.InvokeMethod(string methodName, object obj, params object[] parameters)
+## Type.InvokeMethod
 Allow to dynamic call method.
 ```csharp
 pulic class User
@@ -79,7 +79,7 @@ public class Test
 }
 
 ```
-## Object.CopyValueTo(object target, CopyValueMethod method, bool ingoreConvertTypeFailed, StringComparison stringComparison)
+## Object.CopyValueTo
 Allow to copy value of properties to target object. Only support use property name or alias name.  
 ```csharp
 var obj1 = new Object();
@@ -88,31 +88,7 @@ obj1.CopyValueTo(obj2);
 ```
 ### Parameters
 - target: Copy value of properties to this object.
-- method: The method how to copy value. Default is CopyValueMethod.UsingPropertyNameOrAlias.
-- ingoreConvertTypeFailed: If two properties have different type, it will be thrown when try to set value. If this value is true, it will skip, otherwize throw exception. Default is false.
+- ignorePropertyNames: Allow to ignore specified property when copy value. Default is null.
+- propertyMap: Allow to change property name to new name as compare value. Default is null.
+- ignoreRefType: Allow to ingore ref type when copy value. Default is true.
 - stringComparison: Compare name or alias with this value. Default is StringComparison.CurrentCulture.
-### Copy value method
-```csharp
-public enum CopyValueMethod
-{
-      UsingPropertyNameOrAlias
-}
-```
-### Use Alias
-Allow to use AliasAttribute to specify another name. It will be used to compare property name.
-```csharp
-public class UserModel
-{
-      [Alias("RealName")]
-      public string Name {get; set;}
-}
-
-public class UserEntity
-{
-    public string RealName {get; set;}
-}
-
-var obj1 = new UserModel();
-var obj2 = new UserEntity();
-obj1.CopyValueTo(obj2);
-```
