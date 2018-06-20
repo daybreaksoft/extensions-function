@@ -61,7 +61,18 @@ namespace Daybreaksoft.Extensions.Functions
             StringComparison stringComparison)
         {
             var name = property.Name;
-            var alias = string.Empty;
+
+            if (ignoreRefType)
+            {
+#if !NetStandard13
+                if (!(property.PropertyType.IsValueType || property.PropertyType == typeof(string)))
+                {
+                    return null;
+                }
+#else
+                throw new Exception("Can not support to ignore ref type in netstandard1.3.");
+#endif
+            }
 
             // Direct return null if the type name wihtin ginore property names list
             if (ignorePropertyNames != null && ignorePropertyNames.Any(p => p.Equals(name, stringComparison)))
@@ -81,22 +92,12 @@ namespace Daybreaksoft.Extensions.Functions
             // Try to using propery name to find same property
             var tps = targetProperties.Where(p => p.Name.Equals(name, stringComparison));
 
-            if (ignoreRefType)
-            {
-
-#if !NetStandard13
-                tps = tps.Where(p => p.PropertyType.IsValueType || p.PropertyType == typeof(string));
-#else
-                throw new Exception("Can not support to ignore ref type in netstandard1.3.");
-#endif
-            }
-
             // Verify whether only have one property
             if (tps.Any())
             {
                 if (tps.Count() > 1)
                 {
-                    throw new MultipleResultException($"Thre are more than one propery named {name}{(string.IsNullOrEmpty(alias) ? "" : $" or {alias}")}");
+                    throw new MultipleResultException($"Thre are more than one propery named {name}");
                 }
             }
 
