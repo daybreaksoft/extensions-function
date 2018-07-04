@@ -43,7 +43,7 @@ namespace Daybreaksoft.Extensions.Functions
         }
 
         /// <summary>
-        /// Invoide method
+        /// Invoke method
         /// </summary>
         public static object InvokeMethod(this Type type, string methodName, object obj, params object[] parameters)
         {

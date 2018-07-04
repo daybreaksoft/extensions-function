@@ -9,5 +9,7 @@ namespace Daybreaksoft.Extensions.Functions.Tests.Requires
         public Model3 P8 { get; set; }
 
         public List<Model4> P9 { get; set; }
+
+        public int P10 { get; set; }
     }
 }

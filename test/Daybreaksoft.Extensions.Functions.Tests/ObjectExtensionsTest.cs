@@ -1,13 +1,9 @@
-﻿using Daybreaksoft.Extensions.Functions.Tests.Requires;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+using Daybreaksoft.Extensions.Functions.Tests.Requires;
 using Xunit;
-using Daybreaksoft.Extensions.Functions;
 
-namespace Daybreaksoft.DotNet.Extensions.Tests
+namespace Daybreaksoft.Extensions.Functions.Tests
 {
     public class ObjectExtensionsTest
     {
@@ -30,7 +26,8 @@ namespace Daybreaksoft.DotNet.Extensions.Tests
                 P9 = new List<Model4> {
                     new Model4{ P1 = "1-P4-P1"},
                     new Model4{ P1 = "2-P4-P1"}
-                }
+                },
+                P10 = 10
             };
 
             // Verifies that pass a null object
@@ -91,12 +88,21 @@ namespace Daybreaksoft.DotNet.Extensions.Tests
             m1.CopyValueTo(m5, ignoreRefType: false);
             Assert.True(m1.P8 == m5.P8);
             Assert.True(m1.P9 == m5.P9);
+            Assert.True(m1.P10.ToString() == m5.P10.ToString());
 
             // Verifies that ignore ref type
             m5 = new Model5();
             m1.CopyValueTo(m5);
             Assert.Null(m5.P8);
             Assert.Null(m5.P9);
+            Assert.Equal(0, m5.P10);
+
+            // Verifies that force property names
+            m5 = new Model5();
+            m1.CopyValueTo(m5, forcePropertyNames: new string[] {"P10"});
+            Assert.Null(m5.P8);
+            Assert.Null(m5.P9);
+            Assert.Equal(10, m5.P10);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Daybreaksoft.Extensions.Functions
             string[] ignorePropertyNames = null,
             Dictionary<string, string> propertyMap = null,
             bool ignoreRefType = true,
+            string[] forcePropertyNames = null,
             StringComparison stringComparison = StringComparison.CurrentCulture)
         {
             if (target == null) throw new ArgumentNullException("Target object cannot be null.");
@@ -32,7 +33,7 @@ namespace Daybreaksoft.Extensions.Functions
             foreach (var cp in currentObjProperties)
             {
                 // Try to find target property using selected method
-                var tp = FindPropertyUsingPropertyName(cp, targetObjProperties, ignorePropertyNames, propertyMap, ignoreRefType, stringComparison);
+                var tp = FindPropertyUsingPropertyName(cp, targetObjProperties, ignorePropertyNames, propertyMap, ignoreRefType, forcePropertyNames, stringComparison);
 
                 // Try to set value
                 if (tp != null)
@@ -58,11 +59,14 @@ namespace Daybreaksoft.Extensions.Functions
             string[] ignorePropertyNames,
             Dictionary<string, string> propertyMap,
             bool ignoreRefType,
+            string[] forcePropertyNames,
             StringComparison stringComparison)
         {
             var name = property.Name;
 
-            if (ignoreRefType)
+            // If the property within forcePropertyNames whatever try to copy value
+            // Otherwise, whether continue accorindg to ignoreRefType
+            if (!(forcePropertyNames != null && forcePropertyNames.Any(p => p.Equals(name, stringComparison))) && ignoreRefType)
             {
 #if !NetStandard13
                 if (!(property.PropertyType.IsValueType || property.PropertyType == typeof(string)))
