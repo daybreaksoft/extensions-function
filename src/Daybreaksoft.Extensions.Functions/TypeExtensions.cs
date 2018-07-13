@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Daybreaksoft.Extensions.Functions
 {
@@ -14,13 +11,7 @@ namespace Daybreaksoft.Extensions.Functions
         /// </summary>
         public static PropertyInfo[] FindProperties<TAttrubite>(this Type type) where TAttrubite : Attribute
         {
-            PropertyInfo[] properties;
-
-#if !NetStandard13
-            properties = type.GetProperties();
-#else
-            properties = System.Reflection.TypeExtensions.GetProperties(type);
-#endif
+            var properties = type.GetProperties();
 
             return properties.Where(p => p.GetCustomAttributes<TAttrubite>().Any()).ToArray();
         }
