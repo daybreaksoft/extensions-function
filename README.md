@@ -91,4 +91,5 @@ obj1.CopyValueTo(obj2);
 - ignorePropertyNames: Allow to ignore specified property when copy value. Default is null.
 - propertyMap: Allow to change property name to new name as compare value. Default is null.
 - ignoreRefType: Allow to ingore ref type when copy value. Default is true.
+- forcePropertyNames: Allow to force to copy value even if ignore ref type. Default is null.
 - stringComparison: Compare name or alias with this value. Default is StringComparison.CurrentCulture.
