@@ -67,14 +67,19 @@ namespace Daybreaksoft.Extensions.Functions
             // Otherwise, whether continue accorindg to ignoreRefType
             if (!(forcePropertyNames != null && forcePropertyNames.Any(p => p.Equals(name, stringComparison))) && ignoreRefType)
             {
+
 #if !NetStandard13
                 if (!(property.PropertyType.IsValueType || property.PropertyType == typeof(string)))
                 {
                     return null;
                 }
 #else
-                throw new Exception("Can not support to ignore ref type in netstandard1.3.");
+                if (!(property.PropertyType.GetTypeInfo().IsValueType || property.PropertyType == typeof(string)))
+                {
+                    return null;
+                }
 #endif
+
             }
 
             // Direct return null if the type name wihtin ginore property names list
