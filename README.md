@@ -17,6 +17,8 @@ Install-Package Daybreaksoft.Extensions.Functions
   - [InvokeMethod](#typeinvokemethod)
 - Object Extensions
   - [CopyValueTo](#objectcopyvalueto)
+- Exception Extensions
+  - [GetRootMessage](#exceptiongetrootmessage)
 # How to use
 ## Type.FindProperties&lt;TAttribute&gt;
 Allow to find property vis specified attrubute. It supports return multiple results.
@@ -93,3 +95,15 @@ obj1.CopyValueTo(obj2);
 - ignoreRefType: Allow to ingore ref type when copy value. Default is true.
 - forcePropertyNames: Allow to force to copy value even if ignore ref type. Default is null.
 - stringComparison: Compare name or alias with this value. Default is StringComparison.CurrentCulture.
+## Exception.GetRootMessage
+Get root error message if there are inner exception(s).  
+```csharp
+try
+{
+    Method();
+}
+catch (Exception e)
+{
+    Console.WriteLine(e.GetRootMessage())
+}
+```
